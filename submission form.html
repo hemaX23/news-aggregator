@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News Aggregator</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 100%;
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+h1, h2, h3 {
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+input[type="text"], textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button[type="submit"] {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+#articles-container, #comments-container {
+    margin-top: 20px;
+}
+
+.article, .comment {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+.article h3, .comment h4 {
+    margin: 0;
+}
+
+.article p, .comment p {
+    margin: 5px 0;
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Submit Your News</h1>
+        <form id="submit-form">
+            <div class="form-group">
+                <label for="title">Title:</label>
+                <input type="text" id="title" name="title" required>
+            </div>
+            <div class="form-group">
+                <label for="content">Content:</label>
+                <textarea id="content" name="content" rows="5" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="author">Author:</label>
+                <input type="text" id="author" name="author" required>
+            </div>
+            <button type="submit">Submit</button>
+        </form>
+        <h2>Recent Articles</h2>
+        <div id="articles-container"></div>
+    </div>
+    <script src="script.js"></script><script> 
+    // Function to handle article submission
+document.getElementById('submit-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+    
+    const title = document.getElementById('title').value;
+    const content = document.getElementById('content').value;
+    const author = document.getElementById('author').value;
+
+    const article = {
+        title: title,
+        content: content,
+        author: author,
+        comments: []
+    };
+
+    // Add the article to the list (simulating a backend service)
+    addArticle(article);
+});
+
+function addArticle(article) {
+    const articlesContainer = document.getElementById('articles-container');
+    const articleElement = document.createElement('div');
+    articleElement.className = 'article';
+    articleElement.innerHTML = `
+        <h3>${article.title}</h3>
+        <p>${article.content}</p>
+        <p><strong>Author:</strong> ${article.author}</p>
+        <div class="comments-section">
+            <h4>Comments</h4>
+            <form class="comment-form">
+                <div class="form-group">
+                    <label for="comment-author">Name:</label>
+                    <input type="text" name="comment-author" required>
+                </div>
+                <div class="form-group">
+                    <label for="comment-content">Comment:</label>
+                    <textarea name="comment-content" rows="3" required></textarea>
+                </div>
+                <button type="submit">Post Comment</button>
+            </form>
+            <div class="comments-container"></div>
+        </div>
+    `;
+
+    // Handle comment submission
+    articleElement.querySelector('.comment-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const commentAuthor = this.querySelector('input[name="comment-author"]').value;
+        const commentContent = this.querySelector('textarea[name="comment-content"]').value;
+
+        const comment = {
+            author: commentAuthor,
+            content: commentContent
+        };
+
+        addComment(articleElement, comment);
+    });
+
+    articlesContainer.appendChild(articleElement);
+}
+
+function addComment(articleElement, comment) {
+    const commentsContainer = articleElement.querySelector('.comments-container');
+    const commentElement = document.createElement('div');
+    commentElement.className = 'comment';
+    commentElement.innerHTML = `
+        <h4>${comment.author}</h4>
+        <p>${comment.content}</p>
+    `;
+    commentsContainer.appendChild(commentElement);
+}
+
+// Example of how to add an article directly (useful for testing)
+addArticle({
+    title: 'Sample Article',
+    content: 'This is a sample article content.',
+    author: 'Jane Doe',
+    comments: []
+});</script>
+</body>
+</html>
